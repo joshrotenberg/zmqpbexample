@@ -1,0 +1,7 @@
+//
+//
+
+message ZmqPBExample {
+	required string foo = 1;
+
+}
