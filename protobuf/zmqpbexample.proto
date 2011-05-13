@@ -1,5 +1,5 @@
 //
-//
+// These are our message types.
 
 message ZmqPBExample {
 	required string foo = 1;

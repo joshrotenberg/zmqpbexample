@@ -1,4 +1,31 @@
 ---------------
 zmqpbexample
 
-This is just a small example of using Protocol Buffers with ZeroMQ in C++.
+This is just a small example of using Protocol Buffers with ZeroMQ in
+C++. I'm using another queue-based system with Protocol Buffers and
+wanted to play around with ZeroMQ as an alternative without rewriting
+everything right away, and figured this example might be useful to
+someone else as well.
+
+
+This example produces a small library for a server class, and a binary
+that runs the server and acts as a client, so it is completely self
+contained, i.e. running the zmqpbexample is all you need to do to see
+it in action. Obviously, the code itself is more interesting than
+running it, but this setup makes it easier to test.
+
+
+Dependencies:
+
+* ZeroMQ - http://www.zeromq.org/
+* Protocol Buffers - http://code.google.com/apis/protocolbuffers/
+
+Build:
+
+bash$ ./configure
+bash$ make
+
+Run:
+
+bash$ ./src/zmqpbexample
+
