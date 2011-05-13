@@ -1,0 +1,4 @@
+---------------
+zmqpbexample
+
+This is just a small example of using Protocol Buffers with ZeroMQ in C++.
