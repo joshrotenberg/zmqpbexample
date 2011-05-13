@@ -1,7 +1,12 @@
 //
 // These are our message types.
 
-message ZmqPBExample {
-	required string foo = 1;
+message ZmqPBExampleRequest {
+	required string request_string = 1;
+	required int32 request_number = 2;
+}
 
+message ZmqPBExampleResponse {
+	required string response_string = 1;
+	required int32 response_number = 2;
 }

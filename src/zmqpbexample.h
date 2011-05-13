@@ -12,8 +12,10 @@ class zmqpbexample {
   explicit zmqpbexample();
   virtual ~zmqpbexample();
 
+  // runs the base server
   void run();
 
+  
  private:
 
 };

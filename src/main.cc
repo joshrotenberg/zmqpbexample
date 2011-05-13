@@ -11,40 +11,51 @@ int main(int argc, char** argv)
   
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-  // run the server
   zmqpbexample z;
   pid_t pid;
 
+  // we fork and run the server in the child process, and kill it once
+  // we are done sending a bunch of requests and handling the responses
   pid = fork();
 
-  std::cerr << pid << std::endl;
   if(pid == 0) {
-    try {
-      z.run();
-    } catch(...) {
-      std::cerr << "woops!\n";
-      return 1;
-    }
+    z.run();
   } else {
 
-    //  Prepare our context and socket
     zmq::context_t context (1);
     zmq::socket_t socket (context, ZMQ_REQ);
 
-    std::cout << "Connecting to hello world server..." << std::endl;
     socket.connect ("tcp://localhost:5555");
 
-    //  Do 10 requests, waiting each time for a response
     for (int request_nbr = 0; request_nbr != 10; request_nbr++) {
-      zmq::message_t request (6);
-      memcpy ((void *) request.data (), "Hello", 5);
-      std::cout << "Sending Hello " << request_nbr << "..." << std::endl;
+
+      // set up the request protobuf
+      ZmqPBExampleRequest pb_request;
+      pb_request.set_request_string("foo");
+      pb_request.set_request_number(request_nbr);
+
+      // serialize the request to a string
+      std::string pb_serialized;
+      pb_request.SerializeToString(&pb_serialized);
+
+      // create and send the zmq message
+      zmq::message_t request (pb_serialized.size());
+      memcpy ((void *) request.data (), pb_serialized.c_str(), 
+	      pb_serialized.size());
+
+      std::cout << "client: Sending request " << request_nbr << "..." << 
+	std::endl;
       socket.send (request);
 
-      //  Get the reply.
+      //  create and receive the reply
       zmq::message_t reply;
       socket.recv (&reply);
-      std::cout << "Received World " << request_nbr << std::endl;
+
+      // get the response object and parse it
+      ZmqPBExampleResponse pb_response;
+      pb_response.ParseFromArray(reply.data(), reply.size());
+      std::cout << "client: Received " << pb_response.response_number() << ": "
+		<< pb_response.response_string() << std::endl;
     }
     // kill the server
     kill(pid, SIGTERM);

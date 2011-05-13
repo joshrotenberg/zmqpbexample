@@ -30,18 +30,19 @@ void  protobuf_AddDesc_zmqpbexample_2eproto();
 void protobuf_AssignDesc_zmqpbexample_2eproto();
 void protobuf_ShutdownFile_zmqpbexample_2eproto();
 
-class ZmqPBExample;
+class ZmqPBExampleRequest;
+class ZmqPBExampleResponse;
 
 // ===================================================================
 
-class ZmqPBExample : public ::google::protobuf::Message {
+class ZmqPBExampleRequest : public ::google::protobuf::Message {
  public:
-  ZmqPBExample();
-  virtual ~ZmqPBExample();
+  ZmqPBExampleRequest();
+  virtual ~ZmqPBExampleRequest();
   
-  ZmqPBExample(const ZmqPBExample& from);
+  ZmqPBExampleRequest(const ZmqPBExampleRequest& from);
   
-  inline ZmqPBExample& operator=(const ZmqPBExample& from) {
+  inline ZmqPBExampleRequest& operator=(const ZmqPBExampleRequest& from) {
     CopyFrom(from);
     return *this;
   }
@@ -55,17 +56,17 @@ class ZmqPBExample : public ::google::protobuf::Message {
   }
   
   static const ::google::protobuf::Descriptor* descriptor();
-  static const ZmqPBExample& default_instance();
+  static const ZmqPBExampleRequest& default_instance();
   
-  void Swap(ZmqPBExample* other);
+  void Swap(ZmqPBExampleRequest* other);
   
   // implements Message ----------------------------------------------
   
-  ZmqPBExample* New() const;
+  ZmqPBExampleRequest* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ZmqPBExample& from);
-  void MergeFrom(const ZmqPBExample& from);
+  void CopyFrom(const ZmqPBExampleRequest& from);
+  void MergeFrom(const ZmqPBExampleRequest& from);
   void Clear();
   bool IsInitialized() const;
   
@@ -88,99 +89,311 @@ class ZmqPBExample : public ::google::protobuf::Message {
   
   // accessors -------------------------------------------------------
   
-  // required string foo = 1;
-  inline bool has_foo() const;
-  inline void clear_foo();
-  static const int kFooFieldNumber = 1;
-  inline const ::std::string& foo() const;
-  inline void set_foo(const ::std::string& value);
-  inline void set_foo(const char* value);
-  inline void set_foo(const char* value, size_t size);
-  inline ::std::string* mutable_foo();
-  inline ::std::string* release_foo();
+  // required string request_string = 1;
+  inline bool has_request_string() const;
+  inline void clear_request_string();
+  static const int kRequestStringFieldNumber = 1;
+  inline const ::std::string& request_string() const;
+  inline void set_request_string(const ::std::string& value);
+  inline void set_request_string(const char* value);
+  inline void set_request_string(const char* value, size_t size);
+  inline ::std::string* mutable_request_string();
+  inline ::std::string* release_request_string();
   
-  // @@protoc_insertion_point(class_scope:ZmqPBExample)
+  // required int32 request_number = 2;
+  inline bool has_request_number() const;
+  inline void clear_request_number();
+  static const int kRequestNumberFieldNumber = 2;
+  inline ::google::protobuf::int32 request_number() const;
+  inline void set_request_number(::google::protobuf::int32 value);
+  
+  // @@protoc_insertion_point(class_scope:ZmqPBExampleRequest)
  private:
-  inline void set_has_foo();
-  inline void clear_has_foo();
+  inline void set_has_request_string();
+  inline void clear_has_request_string();
+  inline void set_has_request_number();
+  inline void clear_has_request_number();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
-  ::std::string* foo_;
+  ::std::string* request_string_;
+  ::google::protobuf::int32 request_number_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
   
   friend void  protobuf_AddDesc_zmqpbexample_2eproto();
   friend void protobuf_AssignDesc_zmqpbexample_2eproto();
   friend void protobuf_ShutdownFile_zmqpbexample_2eproto();
   
   void InitAsDefaultInstance();
-  static ZmqPBExample* default_instance_;
+  static ZmqPBExampleRequest* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ZmqPBExampleResponse : public ::google::protobuf::Message {
+ public:
+  ZmqPBExampleResponse();
+  virtual ~ZmqPBExampleResponse();
+  
+  ZmqPBExampleResponse(const ZmqPBExampleResponse& from);
+  
+  inline ZmqPBExampleResponse& operator=(const ZmqPBExampleResponse& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ZmqPBExampleResponse& default_instance();
+  
+  void Swap(ZmqPBExampleResponse* other);
+  
+  // implements Message ----------------------------------------------
+  
+  ZmqPBExampleResponse* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ZmqPBExampleResponse& from);
+  void MergeFrom(const ZmqPBExampleResponse& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::google::protobuf::Metadata GetMetadata() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // required string response_string = 1;
+  inline bool has_response_string() const;
+  inline void clear_response_string();
+  static const int kResponseStringFieldNumber = 1;
+  inline const ::std::string& response_string() const;
+  inline void set_response_string(const ::std::string& value);
+  inline void set_response_string(const char* value);
+  inline void set_response_string(const char* value, size_t size);
+  inline ::std::string* mutable_response_string();
+  inline ::std::string* release_response_string();
+  
+  // required int32 response_number = 2;
+  inline bool has_response_number() const;
+  inline void clear_response_number();
+  static const int kResponseNumberFieldNumber = 2;
+  inline ::google::protobuf::int32 response_number() const;
+  inline void set_response_number(::google::protobuf::int32 value);
+  
+  // @@protoc_insertion_point(class_scope:ZmqPBExampleResponse)
+ private:
+  inline void set_has_response_string();
+  inline void clear_has_response_string();
+  inline void set_has_response_number();
+  inline void clear_has_response_number();
+  
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  
+  ::std::string* response_string_;
+  ::google::protobuf::int32 response_number_;
+  
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  
+  friend void  protobuf_AddDesc_zmqpbexample_2eproto();
+  friend void protobuf_AssignDesc_zmqpbexample_2eproto();
+  friend void protobuf_ShutdownFile_zmqpbexample_2eproto();
+  
+  void InitAsDefaultInstance();
+  static ZmqPBExampleResponse* default_instance_;
 };
 // ===================================================================
 
 
 // ===================================================================
 
-// ZmqPBExample
+// ZmqPBExampleRequest
 
-// required string foo = 1;
-inline bool ZmqPBExample::has_foo() const {
+// required string request_string = 1;
+inline bool ZmqPBExampleRequest::has_request_string() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void ZmqPBExample::set_has_foo() {
+inline void ZmqPBExampleRequest::set_has_request_string() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void ZmqPBExample::clear_has_foo() {
+inline void ZmqPBExampleRequest::clear_has_request_string() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void ZmqPBExample::clear_foo() {
-  if (foo_ != &::google::protobuf::internal::kEmptyString) {
-    foo_->clear();
+inline void ZmqPBExampleRequest::clear_request_string() {
+  if (request_string_ != &::google::protobuf::internal::kEmptyString) {
+    request_string_->clear();
   }
-  clear_has_foo();
+  clear_has_request_string();
 }
-inline const ::std::string& ZmqPBExample::foo() const {
-  return *foo_;
+inline const ::std::string& ZmqPBExampleRequest::request_string() const {
+  return *request_string_;
 }
-inline void ZmqPBExample::set_foo(const ::std::string& value) {
-  set_has_foo();
-  if (foo_ == &::google::protobuf::internal::kEmptyString) {
-    foo_ = new ::std::string;
+inline void ZmqPBExampleRequest::set_request_string(const ::std::string& value) {
+  set_has_request_string();
+  if (request_string_ == &::google::protobuf::internal::kEmptyString) {
+    request_string_ = new ::std::string;
   }
-  foo_->assign(value);
+  request_string_->assign(value);
 }
-inline void ZmqPBExample::set_foo(const char* value) {
-  set_has_foo();
-  if (foo_ == &::google::protobuf::internal::kEmptyString) {
-    foo_ = new ::std::string;
+inline void ZmqPBExampleRequest::set_request_string(const char* value) {
+  set_has_request_string();
+  if (request_string_ == &::google::protobuf::internal::kEmptyString) {
+    request_string_ = new ::std::string;
   }
-  foo_->assign(value);
+  request_string_->assign(value);
 }
-inline void ZmqPBExample::set_foo(const char* value, size_t size) {
-  set_has_foo();
-  if (foo_ == &::google::protobuf::internal::kEmptyString) {
-    foo_ = new ::std::string;
+inline void ZmqPBExampleRequest::set_request_string(const char* value, size_t size) {
+  set_has_request_string();
+  if (request_string_ == &::google::protobuf::internal::kEmptyString) {
+    request_string_ = new ::std::string;
   }
-  foo_->assign(reinterpret_cast<const char*>(value), size);
+  request_string_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* ZmqPBExample::mutable_foo() {
-  set_has_foo();
-  if (foo_ == &::google::protobuf::internal::kEmptyString) {
-    foo_ = new ::std::string;
+inline ::std::string* ZmqPBExampleRequest::mutable_request_string() {
+  set_has_request_string();
+  if (request_string_ == &::google::protobuf::internal::kEmptyString) {
+    request_string_ = new ::std::string;
   }
-  return foo_;
+  return request_string_;
 }
-inline ::std::string* ZmqPBExample::release_foo() {
-  clear_has_foo();
-  if (foo_ == &::google::protobuf::internal::kEmptyString) {
+inline ::std::string* ZmqPBExampleRequest::release_request_string() {
+  clear_has_request_string();
+  if (request_string_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
   } else {
-    ::std::string* temp = foo_;
-    foo_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    ::std::string* temp = request_string_;
+    request_string_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
     return temp;
   }
+}
+
+// required int32 request_number = 2;
+inline bool ZmqPBExampleRequest::has_request_number() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ZmqPBExampleRequest::set_has_request_number() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ZmqPBExampleRequest::clear_has_request_number() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ZmqPBExampleRequest::clear_request_number() {
+  request_number_ = 0;
+  clear_has_request_number();
+}
+inline ::google::protobuf::int32 ZmqPBExampleRequest::request_number() const {
+  return request_number_;
+}
+inline void ZmqPBExampleRequest::set_request_number(::google::protobuf::int32 value) {
+  set_has_request_number();
+  request_number_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// ZmqPBExampleResponse
+
+// required string response_string = 1;
+inline bool ZmqPBExampleResponse::has_response_string() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ZmqPBExampleResponse::set_has_response_string() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ZmqPBExampleResponse::clear_has_response_string() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ZmqPBExampleResponse::clear_response_string() {
+  if (response_string_ != &::google::protobuf::internal::kEmptyString) {
+    response_string_->clear();
+  }
+  clear_has_response_string();
+}
+inline const ::std::string& ZmqPBExampleResponse::response_string() const {
+  return *response_string_;
+}
+inline void ZmqPBExampleResponse::set_response_string(const ::std::string& value) {
+  set_has_response_string();
+  if (response_string_ == &::google::protobuf::internal::kEmptyString) {
+    response_string_ = new ::std::string;
+  }
+  response_string_->assign(value);
+}
+inline void ZmqPBExampleResponse::set_response_string(const char* value) {
+  set_has_response_string();
+  if (response_string_ == &::google::protobuf::internal::kEmptyString) {
+    response_string_ = new ::std::string;
+  }
+  response_string_->assign(value);
+}
+inline void ZmqPBExampleResponse::set_response_string(const char* value, size_t size) {
+  set_has_response_string();
+  if (response_string_ == &::google::protobuf::internal::kEmptyString) {
+    response_string_ = new ::std::string;
+  }
+  response_string_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ZmqPBExampleResponse::mutable_response_string() {
+  set_has_response_string();
+  if (response_string_ == &::google::protobuf::internal::kEmptyString) {
+    response_string_ = new ::std::string;
+  }
+  return response_string_;
+}
+inline ::std::string* ZmqPBExampleResponse::release_response_string() {
+  clear_has_response_string();
+  if (response_string_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = response_string_;
+    response_string_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+
+// required int32 response_number = 2;
+inline bool ZmqPBExampleResponse::has_response_number() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ZmqPBExampleResponse::set_has_response_number() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ZmqPBExampleResponse::clear_has_response_number() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ZmqPBExampleResponse::clear_response_number() {
+  response_number_ = 0;
+  clear_has_response_number();
+}
+inline ::google::protobuf::int32 ZmqPBExampleResponse::response_number() const {
+  return response_number_;
+}
+inline void ZmqPBExampleResponse::set_response_number(::google::protobuf::int32 value) {
+  set_has_response_number();
+  response_number_ = value;
 }
 
 
