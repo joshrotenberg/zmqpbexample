@@ -9,15 +9,14 @@ class zmqpbexample;
 class zmqpbexample {
 
  public:
-  explicit zmqpbexample();
+  explicit zmqpbexample(const std::string& endpoint);
   virtual ~zmqpbexample();
 
   // runs the base server
   void run();
 
-  
  private:
-
+  std::string endpoint_;
 };
 
 

@@ -6,12 +6,13 @@
 
 #include <iostream>
 
+const std::string& kEndpoint = "tcp://*:5555";
 int main(int argc, char** argv) 
 {
   
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-  zmqpbexample z;
+  zmqpbexample z(kEndpoint);
   pid_t pid;
 
   // we fork and run the server in the child process, and kill it once

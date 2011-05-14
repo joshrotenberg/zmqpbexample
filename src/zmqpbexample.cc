@@ -2,7 +2,9 @@
 
 #include <iostream>
 
-zmqpbexample::zmqpbexample() {
+zmqpbexample::zmqpbexample(const std::string& endpoint) 
+  : endpoint_(endpoint)
+{
 
 }
 
@@ -15,7 +17,7 @@ void zmqpbexample::run() {
   //  Prepare our context and socket
   zmq::context_t context (1);
   zmq::socket_t socket (context, ZMQ_REP);
-  socket.bind ("tcp://*:5555");
+  socket.bind (endpoint_.c_str());
 
   while (true) {
     zmq::message_t request;
