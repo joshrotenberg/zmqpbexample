@@ -12,11 +12,18 @@ class zmqpbexample {
   explicit zmqpbexample(const std::string& endpoint);
   virtual ~zmqpbexample();
 
-  // runs the base server
-  void run();
+  void run_simple();
+  void run_rpc();
 
  private:
+
   std::string endpoint_;
+  void rpc_handler(const std::string& service,
+		   const std::string& method,
+		   const std::string& serialized_request,
+		   std::string* serialized_response);
+  
+
 };
 
 
