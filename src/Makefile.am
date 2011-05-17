@@ -10,7 +10,6 @@ libzmqpbexample_la_SOURCES = zmqpbexample.pb.cc zmqpbexample.cc
 zmqpbexample.pb.cc: ../protobuf/zmqpbexample.proto
 	${PROTOC} --cpp_out=. --proto_path=../protobuf ../protobuf/zmqpbexample.proto
 
-
 bin_PROGRAMS = zmqpbexample
 zmqpbexample_SOURCES = main.cc
 zmqpbexample_LDADD = libzmqpbexample.la

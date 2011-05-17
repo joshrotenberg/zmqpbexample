@@ -14,6 +14,7 @@ class zmqpbexample {
 
   void run_simple();
   void run_rpc();
+  void run_weather();
 
  private:
 

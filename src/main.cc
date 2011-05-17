@@ -2,6 +2,9 @@
 
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/dynamic_message.h>
+#include <google/protobuf/io/coded_stream.h>
+#include <google/protobuf/io/zero_copy_stream_impl.h>
+#include <google/protobuf/stubs/common.h>
 
 #include <assert.h>
 #include <unistd.h>
@@ -11,8 +14,11 @@
 
 #include <iostream>
 
+using namespace google::protobuf::io;
+
 void simple();
 void rpc();
+void weather();
 
 // our generic rpc service function.
 bool service(zmq::socket_t* socket,
@@ -30,7 +36,15 @@ int main(int argc, char** argv)
   // from the request to the response.
   simple();
 
+  // a slightly more complex example that implements a barebones rpc server,
+  // using a single wrapper request/response protobuf that can accomodate 
+  // any type of method specifc payload as an embedded message
   rpc();
+
+  // a version of the weather update pub/sub example that uses protocol buffers
+  // and the underlying coded stream api to publish updates with 1 or more 
+  // messages at a time
+  weather();
 
   return 0;
 }
@@ -130,11 +144,15 @@ void rpc()
   RPCReverseResponse reverse_response;
   if(!service(&socket, "reverse", reverse_request, &reverse_response)) {
     // handle errors
+    std::cout << "foo bar!\n";
   }
   assert(reverse_response.reversed() == "em esrever");
   
 }
 
+// the client's 'service' handler takes care of the wrapping and unwrapping
+// of the rpc request/responses, but doesn't need to know anything about
+// the underlying operation of the specific method.
 bool service(zmq::socket_t* socket, 
 	     const std::string& method, 
 	     const google::protobuf::Message& request,
@@ -187,4 +205,70 @@ bool service(zmq::socket_t* socket,
   // otherwise parse the response and return true
   response->ParseFromString(rpc_response.protobuf());
   return true;
+}
+
+static void* start_weather(void* arg) {
+  static_cast<zmqpbexample*>(arg)->run_weather();
+}
+
+void weather() 
+{
+  std::string weather_endpoint = "tcp://127.0.0.1:5557";
+
+  zmqpbexample z(weather_endpoint);
+  
+  pthread_t thread;
+  pthread_create(&thread, NULL, start_weather,  &z);
+
+  zmq::context_t context (1);
+  zmq::socket_t subscriber (context, ZMQ_SUB);
+  subscriber.connect(weather_endpoint.c_str());
+
+  subscriber.setsockopt(ZMQ_SUBSCRIBE, NULL, 0);
+
+  int update_nbr;
+  for (update_nbr = 0; update_nbr < 10; update_nbr++) {
+    zmq::message_t update;
+    subscriber.recv(&update);
+
+    // use protocol buffer's io stuff to package up a bunch of stuff into 
+    // one stream of serialized messages. the first part of the stream 
+    // is the number of messages. next, each message is preceeded by its
+    // size in bytes.
+    ZeroCopyInputStream* raw_input = 
+      new ArrayInputStream(update.data(), update.size());
+    CodedInputStream* coded_input = new CodedInputStream(raw_input);
+
+    // find out how many updates are in this message
+    uint32_t num_updates;
+    coded_input->ReadLittleEndian32(&num_updates);
+    std::cout << "received update " << update_nbr << std::endl;
+
+    // now for each message in the stream, find the size and parse it ...
+    for(int i = 0; i < num_updates; i++) {
+
+      std::cout << "\titem: " << i << std::endl;
+
+      std::string serialized_update;
+      uint32_t serialized_size;
+      ZmqPBExampleWeather weather_update;
+      
+      // the message size
+      coded_input->ReadVarint32(&serialized_size);
+      // the serialized message data
+      coded_input->ReadString(&serialized_update, serialized_size);
+      
+      // parse it
+      weather_update.ParseFromString(serialized_update);
+      std::cout << "\t\tzip: " << weather_update.zipcode() << std::endl;
+      std::cout << "\t\ttemperature: " << weather_update.temperature() << 
+	std::endl;
+      std::cout << "\t\trelative humidity: " << 
+	weather_update.relhumidity() << std::endl;
+    }
+
+    delete coded_input;
+    delete raw_input;
+  }
+  
 }

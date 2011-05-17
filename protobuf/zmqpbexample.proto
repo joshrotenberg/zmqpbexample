@@ -46,3 +46,9 @@ message RPCReverseRequest {
 message RPCReverseResponse {
   required string reversed = 1;
 }
+
+message ZmqPBExampleWeather {
+  required uint32 zipcode = 1;
+  required uint32 temperature = 2;
+  required uint32 relhumidity = 3;
+}
