@@ -110,7 +110,7 @@ void rpc()
   zmq::socket_t socket (context, ZMQ_REQ);
   socket.connect (rpc_endpoint.c_str());
   
-  // create a request 
+  // create an add request 
   RPCAddRequest add_request;
   add_request.set_term1(4);
   add_request.set_term2(6);
@@ -122,7 +122,16 @@ void rpc()
     // handle errors
   }
   assert(add_response.sum() == 10);
-  //  std::cout << add_response.sum() << std::endl;
+
+  // create a reverse request
+  RPCReverseRequest reverse_request;
+  reverse_request.set_to_reverse("reverse me");
+  
+  RPCReverseResponse reverse_response;
+  if(!service(&socket, "reverse", reverse_request, &reverse_response)) {
+    // handle errors
+  }
+  assert(reverse_response.reversed() == "em esrever");
   
 }
 

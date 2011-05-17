@@ -3,6 +3,8 @@
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/dynamic_message.h>
 
+#include <string>
+#include <algorithm>
 #include <iostream>
 
 zmqpbexample::zmqpbexample(const std::string& endpoint) 
@@ -89,17 +91,19 @@ void zmqpbexample::rpc_handler(const std::string& service,
 			       std::string* serialized_response) {
   
   // in real life, this would probably dispatch registered callbacks to handle 
-  // different methods or something fancy like that.
-
+  // different methods or something fancy like that, but for simplicity,
+  // this one handler knows how to run our two functions.
 
   if(method.compare("add") == 0) {
+    // since we know the type of the request here, we don't have to
+    // use the reflection api
     google::protobuf::Message *request = new RPCAddRequest;
     RPCAddResponse response;
 
     // get the descriptor
     const google::protobuf::Descriptor* descriptor = request->GetDescriptor();
 
-    // verify thisour fields
+    // find the fields
     const google::protobuf::FieldDescriptor* term1_field = 
       descriptor->FindFieldByName("term1");
     const google::protobuf::FieldDescriptor* term2_field = 
@@ -116,29 +120,16 @@ void zmqpbexample::rpc_handler(const std::string& service,
     // set up the response
     response.set_sum(sum);
     response.SerializeToString(serialized_response);
-    /*
-    try {
-      google::protobuf::DynamicMessageFactory factory;
-      
-    std::cout << rpc_request.method().compare("add") << std::endl;
-    const google::protobuf::Message* prototype_msg =
-      factory.GetPrototype(descriptor);
-    google::protobuf::Message* mutable_msg = prototype_msg->New();
-    
-    mutable_msg->ParseFromString(rpc_request.protobuf());
-    request.CheckTypeAndMergeFrom(*mutable_msg);
-    
-    std::cerr << request.GetTypeName() << std::endl;
-
-    delete mutable_msg;
-    
-    } catch(...) {
-
-    }
-    */
   }
   else if(method.compare("reverse") == 0) {
-    
+    RPCReverseRequest request;
+    RPCReverseResponse response;
+    request.ParseFromString(serialized_request);
+
+    std::string to_reverse = request.to_reverse();
+    reverse(to_reverse.begin(), to_reverse.end());
+
+    response.set_reversed(to_reverse);
+    response.SerializeToString(serialized_response);
   }
-  
 }

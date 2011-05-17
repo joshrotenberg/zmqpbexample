@@ -44,5 +44,5 @@ message RPCReverseRequest {
 }
 
 message RPCReverseResponse {
-  required string to_reverse = 1;
+  required string reversed = 1;
 }
