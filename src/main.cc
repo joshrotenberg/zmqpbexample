@@ -19,6 +19,7 @@ using namespace google::protobuf::io;
 void simple();
 void rpc();
 void weather();
+void workers();
 
 // our generic rpc service function.
 bool service(zmq::socket_t* socket,
@@ -46,6 +47,8 @@ int main(int argc, char** argv)
   // messages at a time
   weather();
 
+  //
+  workers();
   return 0;
 }
 
@@ -269,6 +272,52 @@ void weather()
 
     delete coded_input;
     delete raw_input;
+  }
+  
+}
+
+static void* start_worker(void* arg) {
+  static_cast<zmqpbexample*>(arg)->run_worker();
+}
+
+static void* start_broker(void* arg) {
+  static_cast<zmqpbexample*>(arg)->run_broker();
+}
+
+void workers()
+{
+
+  std::string worker_frontend = "tcp://127.0.0.1:5559";
+  std::string worker_backend = "tcp://127.0.0.1:5560";
+
+  zmqpbexample z(worker_frontend, worker_backend);
+
+  pthread_t worker_thread;
+  pthread_create(&worker_thread, NULL, start_worker, &z);
+
+  pthread_t broker_thread;
+  pthread_create(&broker_thread, NULL, start_broker, &z);
+
+
+  zmq::context_t context (1);
+    
+  zmq::socket_t requester (context, ZMQ_REQ);
+
+  requester.connect(worker_frontend.c_str());
+  for( int i = 0; i < 10; i++) {
+
+    std::string request_string = "Hello";
+    zmq::message_t request_message(request_string.size());
+    memcpy(request_message.data(), request_string.data(), request_string.size());
+
+    requester.send(request_message);
+
+    zmq::message_t response_message;
+    requester.recv(&response_message);
+    std::string response_string(static_cast<char*>(response_message.data()),
+                                response_message.size());
+    
+    std::cout << "Received reply " << response_string << std::endl;
   }
   
 }

@@ -47,8 +47,18 @@ message RPCReverseResponse {
   required string reversed = 1;
 }
 
+// weather buffer
 message ZmqPBExampleWeather {
   required uint32 zipcode = 1;
   required uint32 temperature = 2;
   required uint32 relhumidity = 3;
+}
+
+// worker requests and responses
+message ZmqPBExampleWorkerRequest {
+  required string string_in = 1;
+}
+
+message ZmqPBExampleWorkerResponse {
+  required string string_out = 1;
 }

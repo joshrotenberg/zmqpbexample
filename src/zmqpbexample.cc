@@ -16,6 +16,12 @@ zmqpbexample::zmqpbexample(const std::string& endpoint)
   : endpoint_(endpoint) {
 }
 
+zmqpbexample::zmqpbexample(const std::string& frontend,
+                           const std::string& backend) 
+    : frontend_(frontend), backend_(backend) {
+}
+
+
 zmqpbexample::~zmqpbexample() {
 }
 
@@ -204,5 +210,73 @@ void zmqpbexample::run_weather() {
 	    encoded_message.size());
 
     publisher.send(message);
+  }
+}
+
+void zmqpbexample::run_worker() {
+
+  zmq::context_t context (1);
+  zmq::socket_t responder(context, ZMQ_REP);
+
+  responder.connect(backend_.c_str());
+
+  while(true) {
+    zmq::message_t request;
+    responder.recv(&request);
+        
+    std::string string(static_cast<char*>(request.data()), request.size());
+    
+    std::cout << "Received request: " << string << std::endl;
+    //sleep(1);
+    zmq::message_t reply(string.size());
+    memcpy(reply.data(), string.data(), string.size());
+    responder.send(reply);
+  }
+  
+}
+
+void zmqpbexample::run_broker() {
+
+  zmq::context_t context (1);
+  zmq::socket_t frontend(context, ZMQ_XREP);
+  zmq::socket_t backend(context, ZMQ_XREQ);
+  
+  frontend.bind(frontend_.c_str());
+  backend.bind(backend_.c_str());
+
+  zmq::pollitem_t items [] = {
+    { frontend, 0, ZMQ_POLLIN, 0 },
+    { backend,  0, ZMQ_POLLIN, 0 }
+  };
+
+  while(true) {
+    zmq::message_t message;
+    int64_t more;
+
+    zmq::poll(&items[0], 2, -1);
+
+    if(items [0].revents & ZMQ_POLLIN) {
+      while(true) {
+        frontend.recv(&message);
+        size_t more_size = sizeof(more);
+        frontend.getsockopt(ZMQ_RCVMORE, &more, &more_size);
+        backend.send(message, more? ZMQ_SNDMORE: 0);
+
+        if(!more)
+          break;
+      }
+    }
+    if(items [1].revents & ZMQ_POLLIN) {
+      while(true) {
+        backend.recv(&message);
+        size_t more_size = sizeof(more);
+        backend.getsockopt(ZMQ_RCVMORE, &more, &more_size);
+        frontend.send(message, more? ZMQ_SNDMORE: 0);
+
+        if(!more)
+          break;
+      }
+    }
+    
   }
 }
