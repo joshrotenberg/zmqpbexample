@@ -224,19 +224,26 @@ void zmqpbexample::run_worker() {
   int64_t more;
   
   while(true) {
+    ZmqPBExampleWorkerRequest worker_request;
     while(true) {
 
       responder.recv(&message);
       size_t more_size = sizeof(more);
       responder.getsockopt(ZMQ_RCVMORE, &more, &more_size);
 
-      //      std::cout <<  std::string(static_cast<char*>(message.data()), message.size()) << std::endl;
-      if(!more)
+      if(!more) {
+	worker_request.ParseFromArray(message.data(), message.size());
+
         break;
+      }
     }
 
-    sleep(1);
-
+    //sleep(1);
+    std::string to_reverse = worker_request.string_in();
+    reverse(to_reverse.begin(), to_reverse.end());
+	
+    std::cout << "in " << worker_request.string_in() << std::endl;    
+    std::cout << "out " << to_reverse << std::endl;    
     s_send(responder, "World");
   }
   
@@ -245,13 +252,13 @@ void zmqpbexample::run_worker() {
 void zmqpbexample::run_broker() {
 
   zmq::context_t context (1);
-  zmq::socket_t frontend(context, ZMQ_XREP);
-  zmq::socket_t backend(context, ZMQ_XREQ);
+  zmq::socket_t frontend(context, ZMQ_ROUTER);
+  zmq::socket_t backend(context, ZMQ_DEALER);
   
   frontend.bind(frontend_.c_str());
   backend.bind(backend_.c_str());
 
-  zmq::pollitem_t items [] = {
+  zmq::pollitem_t *items [] = {
     { frontend, 0, ZMQ_POLLIN, 0 },
     { backend,  0, ZMQ_POLLIN, 0 }
   };
@@ -264,13 +271,22 @@ void zmqpbexample::run_broker() {
 
     if(items [0].revents & ZMQ_POLLIN) {
       int i = 0;
+      bool in_envelope = true;
       while(true) {
 
         frontend.recv(&message);
         size_t more_size = sizeof(more);
         frontend.getsockopt(ZMQ_RCVMORE, &more, &more_size);
-        std::cout <<  "floop" << std::string(static_cast<char*>(message.data()), message.size()) << std::endl;
-        std::cout << "msg from frontend: " << i++ << std::endl;
+
+	if(!in_envelope) {
+	  //std::cout <<  i++ << ": " << 
+	  //std::string(static_cast<char*>(message.data()), message.size()) << 
+	  //std::endl;
+	}
+
+	if(!message.size()) 
+	  in_envelope = false;
+
         backend.send(message, more? ZMQ_SNDMORE: 0);
 
         if(!more)
@@ -278,10 +294,14 @@ void zmqpbexample::run_broker() {
       }
     }
     if(items [1].revents & ZMQ_POLLIN) {
+      int i = 0;
       while(true) {
         backend.recv(&message);
         size_t more_size = sizeof(more);
         backend.getsockopt(ZMQ_RCVMORE, &more, &more_size);
+	//std::cout <<  i++ << ": " << 
+	//std::string(static_cast<char*>(message.data()), message.size()) << 
+	//std::endl;
         frontend.send(message, more? ZMQ_SNDMORE: 0);
 
         if(!more)

@@ -307,11 +307,25 @@ void workers()
   requester.connect(worker_frontend.c_str());
   for( int j = 0; j < 10; j++) {
 
-    //zmqpbexample::s_sendmore(requester, "Hello");
-    zmqpbexample::s_send(requester, "dude");
+    // create a new workload
+    ZmqPBExampleWorkerRequest worker_request;
+    worker_request.set_string_in("reverse me");
+
+    std::string pb_serialized;
+    worker_request.SerializeToString(&pb_serialized);
+
+    // send the job type string
+    zmqpbexample::s_sendmore(requester, "one");
+    
+    // create and send the zmq message
+    zmq::message_t request (pb_serialized.size());
+    memcpy ((void *) request.data (), pb_serialized.c_str(), 
+	    pb_serialized.size());
+    
+    requester.send (request);
 
     std::string response_string = zmqpbexample::s_recv(requester);
-    std::cout << "Received reply " << response_string << std::endl;
+    //std::cout << "Received reply " << response_string << std::endl;
   }
   
 }
