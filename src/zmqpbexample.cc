@@ -217,20 +217,27 @@ void zmqpbexample::run_worker() {
 
   zmq::context_t context (1);
   zmq::socket_t responder(context, ZMQ_REP);
-
+  
   responder.connect(backend_.c_str());
 
+  zmq::message_t message;
+  int64_t more;
+  
   while(true) {
-    zmq::message_t request;
-    responder.recv(&request);
-        
-    std::string string(static_cast<char*>(request.data()), request.size());
-    
-    std::cout << "Received request: " << string << std::endl;
-    //sleep(1);
-    zmq::message_t reply(string.size());
-    memcpy(reply.data(), string.data(), string.size());
-    responder.send(reply);
+    while(true) {
+
+      responder.recv(&message);
+      size_t more_size = sizeof(more);
+      responder.getsockopt(ZMQ_RCVMORE, &more, &more_size);
+
+      //      std::cout <<  std::string(static_cast<char*>(message.data()), message.size()) << std::endl;
+      if(!more)
+        break;
+    }
+
+    sleep(1);
+
+    s_send(responder, "World");
   }
   
 }
@@ -256,10 +263,14 @@ void zmqpbexample::run_broker() {
     zmq::poll(&items[0], 2, -1);
 
     if(items [0].revents & ZMQ_POLLIN) {
+      int i = 0;
       while(true) {
+
         frontend.recv(&message);
         size_t more_size = sizeof(more);
         frontend.getsockopt(ZMQ_RCVMORE, &more, &more_size);
+        std::cout <<  "floop" << std::string(static_cast<char*>(message.data()), message.size()) << std::endl;
+        std::cout << "msg from frontend: " << i++ << std::endl;
         backend.send(message, more? ZMQ_SNDMORE: 0);
 
         if(!more)
