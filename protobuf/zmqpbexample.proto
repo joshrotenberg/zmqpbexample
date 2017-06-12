@@ -1,7 +1,6 @@
-// Simple messages.
-
 syntax = "proto3";
 
+// Simple messages.
 message ZmqPBExampleRequest {
   string request_string = 1;
   int32 request_number = 2;
@@ -34,7 +33,6 @@ enum RPCError {
 message RPCAddRequest {
   uint32 term1 = 1;
   uint32 term2 = 2;
-
 }
 
 message RPCAddResponse {

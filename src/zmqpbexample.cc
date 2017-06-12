@@ -43,7 +43,7 @@ void zmqpbexample::run_simple() {
     socket.recv (&request);
     pb_request.ParseFromArray(request.data(), request.size());
     
-    std::cout << "server: Receivedd " << pb_request.request_number() << ": " <<
+    std::cout << "server: Received " << pb_request.request_number() << ": " <<
       pb_request.request_string() << std::endl;
     
     // do something interesting with the request here
@@ -119,7 +119,6 @@ void zmqpbexample::rpc_handler(const std::string& service,
     // since we know the type of the request here, we don't have to
     // use the reflection api, but just as an example ...
     google::protobuf::Message *request = new RPCAddRequest;
-
 
     // get the descriptor
     const google::protobuf::Descriptor* descriptor = request->GetDescriptor();
