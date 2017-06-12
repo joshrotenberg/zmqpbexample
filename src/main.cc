@@ -54,6 +54,7 @@ int main(int argc, char** argv)
 
 static void* start_simple(void* arg) {
   static_cast<zmqpbexample*>(arg)->run_simple();
+  pthread_exit(NULL);
 }
 
 void simple()
@@ -110,6 +111,7 @@ void simple()
 
 static void* start_rpc(void* arg) {
   static_cast<zmqpbexample*>(arg)->run_rpc();
+  pthread_exit(NULL);
 }
 
 void rpc() 
@@ -200,7 +202,7 @@ bool service(zmq::socket_t* socket,
   // parse the rpc wrapper
   rpc_response.ParseFromArray(reply.data(), reply.size());
 
-  if(rpc_response.has_error() ) {
+  if(rpc_response.error() != ""  ) {
     // something went wrong
     return false;
   }
@@ -212,6 +214,7 @@ bool service(zmq::socket_t* socket,
 
 static void* start_weather(void* arg) {
   static_cast<zmqpbexample*>(arg)->run_weather();
+  pthread_exit(NULL);
 }
 
 void weather() 
@@ -278,10 +281,12 @@ void weather()
 
 static void* start_worker(void* arg) {
   static_cast<zmqpbexample*>(arg)->run_worker();
+  pthread_exit(NULL);
 }
 
 static void* start_broker(void* arg) {
   static_cast<zmqpbexample*>(arg)->run_broker();
+  pthread_exit(NULL);
 }
 
 void workers()
