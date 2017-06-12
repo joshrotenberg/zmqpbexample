@@ -1,64 +1,66 @@
 // Simple messages.
 
+syntax = "proto3";
+
 message ZmqPBExampleRequest {
-  required string request_string = 1;
-  required int32 request_number = 2;
+  string request_string = 1;
+  int32 request_number = 2;
 }
 
 message ZmqPBExampleResponse {
-  required string response_string = 1;
-  required int32 response_number = 2;
+  string response_string = 1;
+  int32 response_number = 2;
 }
 
 // RPC wrapper messages.
 message ZmqPBExampleRPCRequest {
-  required string service = 1;
-  required string method = 2;
-  required bytes protobuf = 3;
+  string service = 1;
+  string method = 2;
+  bytes protobuf = 3;
 }
 
 message ZmqPBExampleRPCResponse {
-  optional bytes protobuf = 1;
-  optional string error = 2;
+  bytes protobuf = 1;
+  string error = 2;
 }
 
 enum RPCError {
-  NO_SERVICE = 1;
-  NO_METHOD = 2;
-  BAD_REQUEST = 3;
+  NO_SERVICE = 0;
+  NO_METHOD = 1;
+  BAD_REQUEST = 2;
 }
 
 // our specific rpc call request and response messages
 message RPCAddRequest {
-  required uint32 term1 = 1;
-  required uint32 term2 = 2;
+  uint32 term1 = 1;
+  uint32 term2 = 2;
 
 }
 
 message RPCAddResponse {
-  required uint32 sum = 1;
+  uint32 sum = 1;
 }
 
 message RPCReverseRequest {
-  required string to_reverse = 1;
+  string to_reverse = 1;
 }
 
 message RPCReverseResponse {
-  required string reversed = 1;
+  string reversed = 1;
 }
 
 // weather buffer
 message ZmqPBExampleWeather {
-  required uint32 zipcode = 1;
-  required uint32 temperature = 2;
-  required uint32 relhumidity = 3;
+  uint32 zipcode = 1;
+  uint32 temperature = 2;
+  uint32 relhumidity = 3;
 }
 
 // worker requests and responses
 message ZmqPBExampleWorkerRequest {
-  required string string_in = 1;
+  string string_in = 1;
 }
 
 message ZmqPBExampleWorkerResponse {
-  required string string_out = 1;
+  string string_out = 1;
 }
