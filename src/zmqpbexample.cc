@@ -258,7 +258,7 @@ void zmqpbexample::run_broker() {
   frontend.bind(frontend_.c_str());
   backend.bind(backend_.c_str());
 
-  zmq::pollitem_t *items [] = {
+  zmq::pollitem_t items[] = {
     { frontend, 0, ZMQ_POLLIN, 0 },
     { backend,  0, ZMQ_POLLIN, 0 }
   };
