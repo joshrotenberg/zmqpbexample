@@ -29,3 +29,11 @@ Run:
 
 bash$ ./src/zmqpbexample
 
+Note:
+
+This example might not work with newer versions of protobuf. In that case
+you will need to regenerate the protobuf related files and then build.
+
+Regenerating protobuf files:
+
+bash$ protoc -I=. --cpp_out=src/ protobuf/zmqpbexample.proto
