@@ -36,4 +36,4 @@ you will need to regenerate the protobuf related files and then build.
 
 Regenerating protobuf files:
 
-bash$ protoc -I=. --cpp_out=src/ protobuf/zmqpbexample.proto
+bash$ protoc -I=protobuf --cpp_out=src/ protobuf/zmqpbexample.proto
